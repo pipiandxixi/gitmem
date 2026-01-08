@@ -2,8 +2,9 @@
 title: user_gemini
 tags: []
 ---
+
 # user_gemini
- ... (truncated if too long) 
+... (truncated if too long) 
 
 ## Gemini Added Memories for QuantServer Project
 - For QuantServer project, always follow these core principles:  
@@ -16,4 +17,4 @@ tags: []
   2) Use browser tools to visit http://localhost:8000/view/QQQ/1y;  
   3) Check console for Syntax/Type errors;  
   4) Verify chart rendering and interactions.  
-  Do NOT push if local verification fails.
+  Do NOT push if local verification fails. ... (truncated if too long)

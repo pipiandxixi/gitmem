@@ -1,0 +1,42 @@
+---
+title: gemini_context_project
+tags: []
+---
+# gemini_context_project
+
+## GitMem Project Context (Updated: 16:39:15)
+
+### Vision
+GitMem 是一个利用 Git 作为后端存储的语义化记忆服务。它通过 MCP (Model Context Protocol) 协议为 AI Agent 提供持久化、可回溯、具备“摄入-消化”闭环能力的长期记忆体。
+
+### Core Principles
+1. **摄入重于分类**: 原始记忆以“流水账”形式按日归档（`logs/YYYY-MM-DD.md`），保证上下文完整性。
+2. **GitOps 驱动**: 利用 Git Commit 作为事件总线，实现无状态的后台处理。
+3. **混合架构 (Hybrid)**: 本地 MCP Server (FastMCP) 负责极速读写，远程 Backend (FastAPI) 负责异步 LLM 归纳。
+4. **双层存储**: `logs/` 存放原始数据，`knowledge/` 存放结构化知识。
+
+### Current Status
+- [x] **混合架构落地**: 
+    - `src/server.py`: 本地客户端，支持 Git 缓存读写 + HTTP Trigger。
+    - `src/backend.py`: 远程服务端，FastAPI + Async Queue，支持多租户归纳。
+- [x] **存储引擎重构**: 
+    - 原始记忆存入 `logs/` 子目录。
+    - 每日日志头部自动维护累积 Tags。
+- [x] **智能归纳服务 (Digest Worker)**:
+    - 实现了基于 Git Diff 的增量解析。
+    - 实现了 LLM 驱动的话题路由 (`index.yaml`) 和全量重写归纳。
+- [x] **多租户支持**: 通过 Trigger 动态拉取用户 Repo，服务无状态化。
+
+### Key Decisions
+- **通信协议**: 本地与后台之间采用 RESTful (`POST /trigger-digest`) 而非 SSE，简化架构。
+- **状态追踪**: 严格使用 Git Commit Message 中的 `Ref-Commit` 标记，拒绝本地状态文件。
+- **归纳策略**: 采用“全量重写 (Full Rewrite)”模式更新知识库文件，确保文档结构的一致性。
+
+### TODOs
+- [ ] **语义化检索重构**:
+    - **Smart Recall**: 优先检索 `knowledge/` 中的结构化数据，辅以 `logs/` 的最新增量。
+    - **History**: 基于 `knowledge` 文件的版本历史生成话题演进图。
+    - **Graph**: 生成基于 `index.yaml` 和引用关系的知识热力图。
+- [ ] **高级归纳能力**:
+    - 支持冲突检测与人工介入标记。
+    - 定期全量 Compaction（合并碎片化的小话题）。

@@ -48,16 +48,18 @@ def _prepare_backend_repo(git_url: str, git_token: str | None) -> str:
         logger.info(f"Updating temp repo: {repo_path}")
         try:
             repo = Repo(repo_path)
+            # Update remote in case token changed
             if 'origin' in repo.remotes:
                 repo.remotes.origin.set_url(auth_url)
             repo.remotes.origin.pull()
         except Exception as e:
             logger.error(f"Pull failed: {e}")
+            # If repo is corrupt, nuking it is a valid backend strategy
             logger.warning("Nuking corrupt repo and re-cloning...")
             shutil.rmtree(repo_path)
             Repo.clone_from(auth_url, repo_path)
             
-    # Configure Bot Identity
+    # Configure Bot Identity for this temp repo
     repo = Repo(repo_path)
     with repo.config_writer() as git_config:
         if not git_config.has_option('user', 'name'):
@@ -87,36 +89,57 @@ def push(self):
 
 ## Server CLI Updates (src/server.py)
 ### Key Changes:
-- **Git URL Validation**: Ensures `GITMEM_URL` is set (env or explicit arg)
-- **Error Logging**: Logs backend trigger failures to `~/.gitmem/trigger_error.log` with timestamps
+- **Git URL Validation**: Ensures `GITMEM_URL` is set (env or explicit arg) in both `capture_context` and `remember` functions
+- **Error Logging**: Logs backend trigger failures to `~/.gitmem/trigger_error.log` with timestamps (via helper)
 - **Resolved Credentials**: Uses `current_git_url`/`token` (resolved from env/args) instead of direct inputs
+- **Helper Refactor**: Extracted backend trigger logic into `_trigger_digest` helper function
+- **Proxy Avoidance**: Added `trust_env=False` to backend HTTP calls to bypass system proxies for localhost communication
+- **Unified Trigger**: Calls `_trigger_digest` once per capture/remember operation (instead of per file/diff)
 
-### Code Snippet (Validation & Logging):
+### Code Snippet (Helper & Usage):
 ```python
-# 1. Strict Configuration Validation
-current_git_url = git_url or os.environ.get("GITMEM_URL")
-current_git_token = git_token or os.environ.get("GITMEM_TOKEN")
-
-if not current_git_url:
-    return "Error: GITMEM_URL is missing. Please configure it in your environment or pass 'git_url' explicitly."
-
-# ...
-
-# 3. Trigger Remote Backend Digestion
-if "Error:" not in result:
+def _trigger_digest(git_url: str, git_token: Optional[str] = None):
+    """Notify the backend that new content is available for digestion."""
     backend_url = os.environ.get("GITMEM_BACKEND_URL", "http://localhost:8000")
     try:
-        with httpx.Client(timeout=1.0) as client:
-            payload = {"git_url": current_git_url, "git_token": current_git_token}
+        # Force no proxy for localhost communication to avoid 503 errors
+        # when a system proxy is configured (e.g. http_proxy=...)
+        with httpx.Client(timeout=1.0, trust_env=False) as client:
+            payload = {"git_url": git_url, "git_token": git_token}
             resp = client.post(f"{backend_url}/trigger-digest", json=payload)
-            
             if resp.status_code != 200:
                 with open(os.path.expanduser("~/.gitmem/trigger_error.log"), "a") as f:
                     f.write(f"[{datetime.now()}] Backend returned {resp.status_code}: {resp.text}\n")
     except Exception as e:
         with open(os.path.expanduser("~/.gitmem/trigger_error.log"), "a") as f:
             f.write(f"[{datetime.now()}] Trigger failed: {str(e)}\n")
+
+@mcp.tool()
+def capture_context(scope: str = "all", git_url: str = None, git_token: str = None) -> str:
+    # ... (other code)
+    # Resolve config
+    current_git_url = git_url or os.environ.get("GITMEM_URL")
+    current_git_token = git_token or os.environ.get("GITMEM_TOKEN")
+
+    if not current_git_url:
+        return "Error: GITMEM_URL is missing."
+    # ... (other code)
+    # 3. Trigger Digest once for all updates
+    _trigger_digest(current_git_url, current_git_token)
+
+def remember(content: str, topic: str = "global", tags: List[str] = None,
+             dependencies: List[str] = None, git_url: str = None, git_token: str = None) -> str:
+    # ... (other code)
+    current_git_url = git_url or os.environ.get("GITMEM_URL")
+    current_git_token = git_token or os.environ.get("GITMEM_TOKEN")
+
+    if not current_git_url:
+        return "Error: GITMEM_URL is missing."
+    # ... (other code)
+    if "Error:" not in result:
+        _trigger_digest(current_git_url, current_git_token)
 ```
 
 ## Removed Files
-- `sse_server.log` deleted (resolved `ModuleNotFoundError` for `src` module)
+- `sse_server.log` deleted (resolved `ModuleNotFoundError: No module named 'src'` for SSE server initialization)
+- Binary file `src/digest/__pycache__/worker.cpython-313.pyc` updated (no human-readable changes)
