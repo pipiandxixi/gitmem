@@ -1,0 +1,41 @@
+categories: {}
+files:
+  gitmem/GEMINI.md:
+    outline: "- GitMem Project Context\n  > -- Vision: \u8BED\u4E49\u5316\u8BB0\u5FC6\
+      \u670D\u52A1\uFF08Git\u540E\u7AEF\uFF0CMCP\u534F\u8BAE\uFF0CAI Agent\u6301\u4E45\
+      \u5316/\u53EF\u56DE\u6EAF/\u6444\u5165-\u6D88\u5316\u95ED\u73AF\uFF09\n  > --\
+      \ Core Principles\n    > -- -- \u6444\u5165\u91CD\u4E8E\u5206\u7C7B: \u539F\u59CB\
+      \u8BB0\u5FC6\u6309\u65E5\u5F52\u6863`logs/YYYY-MM-DD.md`\uFF0C\u4FDD\u8BC1\u4E0A\
+      \u4E0B\u6587\u5B8C\u6574\u6027\n    > -- -- GitOps \u9A71\u52A8: Git Commit\u4F5C\
+      \u4E3A\u4E8B\u4EF6\u603B\u7EBF\uFF0C\u65E0\u72B6\u6001\u540E\u53F0\u5904\u7406\
+      \n    > -- -- \u6DF7\u5408\u67B6\u6784 (Hybrid): \u672C\u5730FastMCP\uFF08\u6781\
+      \u901F\u8BFB\u5199\uFF09+\u8FDC\u7A0BFastAPI\uFF08\u5F02\u6B65LLM\u5F52\u7EB3\
+      \uFF09\n    > -- -- \u53CC\u5C42\u5B58\u50A8: `logs/`\u5B58\u539F\u59CB\u6570\
+      \u636E\uFF0C`knowledge/`\u5B58\u7ED3\u6784\u5316\u77E5\u8BC6\n  > -- Current\
+      \ Status\n    > -- -- \u6DF7\u5408\u67B6\u6784\u843D\u5730\n      > -- -- --\
+      \ src/server.py: \u672C\u5730\u5BA2\u6237\u7AEF\uFF08Git\u7F13\u5B58\u8BFB\u5199\
+      +HTTP Trigger\uFF09\n      > -- -- -- src/backend.py: \u8FDC\u7A0B\u670D\u52A1\
+      \u7AEF\uFF08FastAPI+Async Queue\uFF0C\u591A\u79DF\u6237\u5F52\u7EB3\uFF09\n\
+      \    > -- -- \u5B58\u50A8\u5F15\u64CE\u91CD\u6784\n      > -- -- -- \u539F\u59CB\
+      \u8BB0\u5FC6\u5B58\u5165`logs/`\u5B50\u76EE\u5F55\n      > -- -- -- \u6BCF\u65E5\
+      \u65E5\u5FD7\u5934\u90E8\u81EA\u52A8\u7EF4\u62A4\u7D2F\u79EFTags\n    > -- --\
+      \ \u667A\u80FD\u5F52\u7EB3\u670D\u52A1 (Digest Worker)\n      > -- -- -- Git\
+      \ Diff\u589E\u91CF\u89E3\u6790\n      > -- -- -- LLM\u9A71\u52A8\u8BDD\u9898\
+      \u8DEF\u7531\uFF08`index.yaml`\uFF09+\u5168\u91CF\u91CD\u5199\u5F52\u7EB3\n\
+      \    > -- -- \u591A\u79DF\u6237\u652F\u6301: Trigger\u52A8\u6001\u62C9\u53D6\
+      \u7528\u6237Repo\uFF0C\u670D\u52A1\u65E0\u72B6\u6001\u5316\n  > -- Key Decisions\n\
+      \    > -- -- \u901A\u4FE1\u534F\u8BAE: RESTful\uFF08`POST /trigger-digest`\uFF09\
+      \u66FF\u4EE3SSE\uFF0C\u7B80\u5316\u67B6\u6784\n    > -- -- \u72B6\u6001\u8FFD\
+      \u8E2A: Git Commit Message `Ref-Commit`\u6807\u8BB0\uFF0C\u62D2\u7EDD\u672C\u5730\
+      \u72B6\u6001\u6587\u4EF6\n    > -- -- \u5F52\u7EB3\u7B56\u7565: \u5168\u91CF\
+      \u91CD\u5199\u66F4\u65B0\u77E5\u8BC6\u5E93\uFF0C\u786E\u4FDD\u7ED3\u6784\u4E00\
+      \u81F4\u6027\n  > -- TODOs\n    > -- -- \u8BED\u4E49\u5316\u68C0\u7D22\u91CD\
+      \u6784\n      > -- -- -- Smart Recall: \u4F18\u5148`knowledge/`\u7ED3\u6784\u5316\
+      \u6570\u636E+`logs/`\u6700\u65B0\u589E\u91CF\n      > -- -- -- History: `knowledge`\u7248\
+      \u672C\u5386\u53F2\u751F\u6210\u8BDD\u9898\u6F14\u8FDB\u56FE\n      > -- --\
+      \ -- Graph: `index.yaml`+\u5F15\u7528\u5173\u7CFB\u751F\u6210\u77E5\u8BC6\u70ED\
+      \u529B\u56FE\n    > -- -- \u9AD8\u7EA7\u5F52\u7EB3\u80FD\u529B\n      > -- --\
+      \ -- \u51B2\u7A81\u68C0\u6D4B+\u4EBA\u5DE5\u4ECB\u5165\u6807\u8BB0\n      >\
+      \ -- -- -- \u5B9A\u671F\u5168\u91CFCompaction\uFF08\u5408\u5E76\u788E\u7247\u5316\
+      \u5C0F\u8BDD\u9898\uFF09"
+    updated_at: '2026-01-11T22:46:02.933476'
