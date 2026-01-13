@@ -1,0 +1,32 @@
+categories:
+  misc: "\u5176\u4ED6\u788E\u7247: \u6682\u65F6\u65E0\u6CD5\u5F52\u7C7B\u7684\u7075\
+    \u611F\u6216\u6742\u9879\u3002"
+files:
+  gitmem/GEMINI.md:
+    outline: "- GitMem Project Context >\n  -- Vision >\n     --- Semantic memory\
+      \ service using Git as backend, MCP protocol for AI Agent's persistent/traceable\
+      \ long-term memory (ingestion-digestion loop)\n  -- Core Principles >\n    \
+      \ --- 1. Ingestion over Classification: Raw memory archived daily as `logs/YYYY-MM-DD.md`\
+      \ (context integrity)\n     --- 2. GitOps Driven: Git Commit as event bus, stateless\
+      \ backend processing\n     --- 3. Hybrid Architecture: Local MCP Server (FastMCP)\
+      \ for fast read/write, remote FastAPI backend for async LLM induction\n    \
+      \ --- 4. Dual-layer Storage: `logs/` (raw data), `knowledge/` (structured knowledge)\n\
+      \  -- Current Status >\n     --- [x] Hybrid Architecture Implemented:\n    \
+      \     ---- `src/server.py`: Local client (Git cache + HTTP Trigger)\n      \
+      \   ---- `src/backend.py`: Remote server (FastAPI + Async Queue, multi-tenant\
+      \ induction)\n     --- [x] Storage Engine Refactored:\n         ---- Raw memory\
+      \ in `logs/` subdirectory\n         ---- Daily logs auto-maintain cumulative\
+      \ Tags\n     --- [x] Digest Worker (Intelligent Induction):\n         ---- Git\
+      \ Diff-based incremental parsing\n         ---- LLM-driven topic routing (`index.yaml`)\
+      \ + full rewrite induction\n     --- [x] Multi-tenant Support: Dynamic Repo\
+      \ pull via Trigger, stateless service\n  -- Key Decisions >\n     --- Communication:\
+      \ RESTful (`POST /trigger-digest`) (simpler than SSE)\n     --- State Tracking:\
+      \ Git Commit Message `Ref-Commit` tag (no local state files)\n     --- Induction:\
+      \ Full Rewrite mode (ensures knowledge file structure consistency)\n  -- TODOs\
+      \ >\n     --- [ ] Semantic Retrieval Reconstruction:\n         ---- Smart Recall:\
+      \ Prioritize `knowledge/` + supplement with latest `logs/`\n         ---- History:\
+      \ Topic evolution graph from `knowledge` version history\n         ---- Graph:\
+      \ Knowledge heatmap (index.yaml + references)\n     --- [ ] Advanced Induction\
+      \ Capabilities:\n         ---- Conflict detection + manual intervention marking\n\
+      \         ---- Regular full Compaction (merge fragmented small topics)"
+    updated_at: '2026-01-13T14:22:44.264968'
